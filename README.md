@@ -12,6 +12,10 @@ Give your coding agents the same project guide, decisions, and lessons learned. 
 
 **Trade-offs:** the team must keep its guides current and review proposed learnings. Setup requires an MCP-capable tool and a small amount of agent-specific configuration. Search is literal text matching, so it does not provide semantic retrieval. Git makes knowledge portable and auditable, but concurrent edits to shared indexes still need review and merge conflict resolution.
 
+## Where the shared knowledge lives
+
+The knowledge lives in the **project's own Git repository**, in `.context-grove/`—not in the Context Grove toolkit repository and not in a hosted database. Commit and push that folder to the project's Git remote so teammates and agents can get the same knowledge by pulling the project. Each agent reads the copy in its current checkout; the MCP server is read-only. To add or change knowledge, edit the Markdown files and share the commit through the project's normal Git workflow.
+
 ## Use Context Grove in your project
 
 You need Node.js 22 or newer and an AI coding tool that supports MCP and skills.
@@ -182,6 +186,10 @@ Compartilhe com seus agentes de programação os mesmos guias, decisões e apren
 **Benefícios:** todas as pessoas e agentes trabalham com as mesmas orientações; há menos repetição de contexto; decisões e aprendizados ficam rastreáveis junto ao código; e o conhecimento revisado pode ser reutilizado entre sessões e ferramentas de IA.
 
 **Trade-offs:** a equipe precisa manter os guias atualizados e revisar os aprendizados propostos. A configuração exige uma ferramenta compatível com MCP e alguns ajustes específicos do agente. A busca compara texto literal, sem recuperação semântica. O Git torna o conhecimento portátil e auditável, mas edições concorrentes em índices compartilhados ainda exigem revisão e resolução de conflitos.
+
+## Onde fica o conhecimento compartilhado
+
+O conhecimento fica no **próprio repositório Git do projeto**, dentro de `.context-grove/` — não no repositório do toolkit Context Grove nem em um banco hospedado. Faça commit e push dessa pasta para o remoto do projeto; assim, equipe e agentes recebem a mesma base ao atualizar o repositório. Cada agente lê a cópia da worktree atual; o servidor MCP é somente leitura. Para adicionar ou alterar conhecimento, edite os arquivos Markdown e compartilhe o commit pelo fluxo Git normal do projeto.
 
 ## Use o Context Grove no seu projeto
 
