@@ -16,7 +16,8 @@ Requires Node.js 22+ and an MCP-compatible client.
 git clone https://github.com/felipedemacedo/context-grove.git
 cd context-grove
 npm install
-node src/init.js
+cd /path/to/your-project
+node /path/to/context-grove/src/init.js
 ```
 
 Add the following server to your agent's MCP configuration (adjust the path):
