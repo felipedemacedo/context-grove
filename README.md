@@ -4,6 +4,12 @@
 
 Give your coding agents the same project guide, decisions, and lessons learned. Context Grove helps you add that shared memory to your own project in a few small steps.
 
+## Benefits and trade-offs
+
+**Benefits:** everyone works from the same project guidance; agents spend less time asking for context; decisions and lessons stay traceable beside the code; and reviewed knowledge can be reused across sessions and AI tools.
+
+**Trade-offs:** the team must keep its guides current and review proposed learnings. Setup requires an MCP-capable tool and a small amount of agent-specific configuration. Search is literal text matching, so it does not provide semantic retrieval. Git makes knowledge portable and auditable, but concurrent edits to shared indexes still need review and merge conflict resolution.
+
 ## Use Context Grove in your project
 
 You need Node.js 22 or newer and an AI coding tool that supports MCP and skills.
@@ -84,6 +90,33 @@ When work uncovers a useful, reusable fact, add a separate Markdown file under `
 Review candidates through your normal Git process. A maintainer decides whether a candidate is accurate and useful, then moves approved guidance into the right canonical document and updates the catalog. A candidate is only a proposal; the MCP server cannot approve or promote it.
 
 For agents working at the same time, see [Parallel agents](docs/parallel-agents.md) for the shared-checkout lock and separate-worktree Git workflows.
+
+## System prompt: set this up in my project
+
+Copy this prompt into a coding agent while it is open in the project where you want to install Context Grove. Replace the two paths first. The prompt asks the agent to adapt the knowledge to the actual project and configure the available agent tools, instead of leaving you with generic starter files.
+
+```text
+You are installing Context Grove, a Git-backed shared knowledge architecture for this project.
+
+Target project: <ABSOLUTE_PATH_TO_TARGET_PROJECT>
+Context Grove checkout: <ABSOLUTE_PATH_TO_CONTEXT_GROVE>
+
+Goal: leave this project with a useful, project-specific shared knowledge base, an MCP connection when supported by the installed coding agent, and required consultation and daily review routines installed for this agent. Preserve all existing user work.
+
+Work through these steps without asking for confirmation for routine, reversible local changes:
+
+1. Inspect the target repository's agent instructions, current Git status, available agent configuration, and existing docs. Do not overwrite user changes. If `.context-grove/` already exists, inspect and extend it rather than initializing over it.
+2. Check Node.js is version 22 or newer. If Context Grove is not installed at the supplied path, clone the public repository into a stable location and report the resulting path. Install its runtime dependencies with `npm install --prefix <ABSOLUTE_PATH_TO_CONTEXT_GROVE>`.
+3. If `.context-grove/` is absent, run the initializer from the target project root: `node <ABSOLUTE_PATH_TO_CONTEXT_GROVE>/src/init.js`. Confirm that the knowledge folder is inside the target project.
+4. Read the Context Grove templates and adapt the catalog and starter docs to this project's real architecture, ownership, security, operational practices, and durable decisions. Inspect project sources before writing facts. Link to authoritative files; mark unknowns instead of inventing them. Keep secrets, personal data, and raw conversations out of shared knowledge. Remove generic placeholders that are not useful.
+5. Copy `templates/skills/knowledge-consultation/SKILL.md` and `templates/skills/daily-review/SKILL.md` into the skill locations supported by the installed agent. Add a concise rule to the existing project entrypoint (such as `AGENTS.md`, `CLAUDE.md`, or its equivalent) requiring consultation before task execution and the daily review at first knowledge access on each UTC date. Preserve the file's existing conventions and unrelated content.
+6. Configure the installed agent's MCP settings to launch `<ABSOLUTE_PATH_TO_CONTEXT_GROVE>/src/server.js` with `CONTEXT_GROVE_ROOT` set to the target project root. Discover the actual config format and preserve existing MCP servers. If this agent does not support MCP or its settings cannot be identified safely, leave a copyable configuration snippet and explain the limitation.
+7. Explain in the project docs how agents create one evidence-backed candidate file per learning, review candidates daily, and promote knowledge only with maintainer approval. For parallel agents, document the shared-checkout lock or separate-worktree Git merge workflow. Keep MCP access read-only.
+8. Validate the setup with `knowledge_health`, `knowledge_catalog`, and a read/search against project knowledge when the MCP client is available. Otherwise perform equivalent local checks and state what could not be verified. Run only checks appropriate to this repository's instructions.
+9. Summarize files changed, agent configuration updated, validation results, remaining manual steps, and any worktree changes that were already present. Do not commit, push, or publish unless I explicitly request it.
+
+Use the language I used to request this setup when reporting results. Complete all feasible setup work before asking me to resolve a genuine blocker.
+```
 
 ## What Context Grove gives your team
 
