@@ -1,0 +1,10 @@
+{
+  "name": "context-grove-mcp",
+  "version": "0.1.0",
+  "description": "Git-backed shared project knowledge for humans and AI agents, served over MCP.",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node src/server.js", "init": "node src/init.js" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.13.0", "zod": "^4.3.6" }
+}
