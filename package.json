@@ -1,7 +1,7 @@
 {
   "name": "context-grove-mcp",
   "version": "0.1.0",
-  "description": "Git-backed shared project knowledge for humans and AI agents, served over MCP.",
+  "description": "Git-backed shared project knowledge for humans and AI agents, served over MCP. / Conhecimento compartilhado de projetos, versionado no Git para pessoas e agentes de IA, via MCP.",
   "license": "MIT",
   "type": "module",
   "engines": { "node": ">=22" },

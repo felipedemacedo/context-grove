@@ -1,5 +1,7 @@
 # Context Grove
 
+[English](#context-grove) · [Português](#context-grove-em-português)
+
 **One trusted project memory for every human and AI agent.**
 
 Give your coding agents the same project guide, decisions, and lessons learned. Context Grove helps you add that shared memory to your own project in a few small steps.
@@ -166,3 +168,174 @@ The daily gate is idempotent by UTC date: if another agent has already recorded 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+---
+
+# Context Grove em português
+
+**Uma memória confiável do projeto para pessoas e agentes de IA.**
+
+Compartilhe com seus agentes de programação os mesmos guias, decisões e aprendizados do projeto. O Context Grove ajuda a adicionar essa memória compartilhada ao seu próprio projeto em alguns passos simples.
+
+## Benefícios e trade-offs
+
+**Benefícios:** todas as pessoas e agentes trabalham com as mesmas orientações; há menos repetição de contexto; decisões e aprendizados ficam rastreáveis junto ao código; e o conhecimento revisado pode ser reutilizado entre sessões e ferramentas de IA.
+
+**Trade-offs:** a equipe precisa manter os guias atualizados e revisar os aprendizados propostos. A configuração exige uma ferramenta compatível com MCP e alguns ajustes específicos do agente. A busca compara texto literal, sem recuperação semântica. O Git torna o conhecimento portátil e auditável, mas edições concorrentes em índices compartilhados ainda exigem revisão e resolução de conflitos.
+
+## Use o Context Grove no seu projeto
+
+Você precisa do Node.js 22 ou mais recente e de uma ferramenta de programação com IA compatível com MCP e skills.
+
+### 1. Obtenha o Context Grove
+
+Clone o toolkit em um local estável do computador. Mantenha essa pasta disponível, pois o projeto e o agente usarão o servidor MCP e os arquivos de skills.
+
+```bash
+mkdir -p ~/repos
+git clone https://github.com/felipedemacedo/context-grove.git ~/repos/context-grove
+npm install --prefix ~/repos/context-grove
+```
+
+### 2. Adicione uma pasta de conhecimento ao projeto
+
+Execute o inicializador a partir do diretório do seu projeto. Ele cria `.context-grove/` com um catálogo e guias iniciais. Se essa pasta já existir, o inicializador para sem sobrescrever seu conteúdo.
+
+```bash
+cd /caminho/para/seu-projeto
+node ~/repos/context-grove/src/init.js
+```
+
+Faça commit de `.context-grove/` no repositório do projeto para compartilhar o conhecimento com a equipe e os agentes.
+
+### 3. Adapte os guias
+
+Abra `.context-grove/CATALOG.md` e siga os links. Acrescente ou referencie as informações que os agentes do projeto devem conhecer, por exemplo:
+
+- como a arquitetura se organiza;
+- onde ficam os principais códigos e quem é responsável por eles;
+- regras de segurança, produto e operação;
+- decisões que a equipe já tomou.
+
+Associe os fatos úteis a evidências, como arquivos-fonte, decisões ou issues. Quando um agente descobrir algo reutilizável, ele pode propor esse aprendizado como candidato; os próximos passos explicam como revisá-lo.
+
+### 4. Conecte sua ferramenta de IA
+
+Adicione o Context Grove como servidor MCP nas configurações do agente. O arquivo exato varia conforme a ferramenta; use o formato de configuração MCP dela. Este exemplo mostra o comando e as variáveis necessários:
+
+```json
+{
+  "mcpServers": {
+    "context-grove": {
+      "command": "node",
+      "args": ["/caminho/absoluto/para/context-grove/src/server.js"],
+      "env": {
+        "CONTEXT_GROVE_ROOT": "/caminho/para/seu-projeto"
+      }
+    }
+  }
+}
+```
+
+Use caminhos absolutos. `CONTEXT_GROVE_ROOT` deve apontar para a pasta do projeto, que contém `.context-grove/`. Reinicie ou recarregue o agente depois de salvar as configurações.
+
+### 5. Ensine as duas rotinas ao agente
+
+Copie estas skills para o diretório de skills usado pelo agente:
+
+- `~/repos/context-grove/templates/skills/knowledge-consultation/SKILL.md`
+- `~/repos/context-grove/templates/skills/daily-review/SKILL.md`
+
+Depois, adicione esta regra às instruções do projeto (`AGENTS.md`, `CLAUDE.md` ou equivalente):
+
+> Antes de iniciar uma tarefa, siga a skill de consulta ao conhecimento. No primeiro acesso ao Context Grove em cada novo dia UTC, conclua a revisão diária de candidatos antes de começar o trabalho.
+
+Se você usa mais de uma ferramenta de IA, instale as skills e inclua a regra em cada uma. A pasta de conhecimento do projeto continua sendo a mesma.
+
+### 6. Comece uma tarefa e compartilhe o que aprendeu
+
+Agora o agente pode conferir as fontes, listar o catálogo, buscar um assunto e ler um guia antes de alterar o projeto. No primeiro acesso ao conhecimento em cada dia UTC, ele revisa os candidatos pendentes e registra o resultado.
+
+Quando o trabalho revelar um fato útil e reutilizável, crie um arquivo Markdown separado em `.context-grove/candidates/`, seguindo `.context-grove/LEARNING.md`. Arquivos separados permitem que agentes descubram aprendizados em paralelo sem editar o mesmo candidato.
+
+### 7. Revise e promova bons aprendizados
+
+Revise os candidatos pelo fluxo Git normal. Um mantenedor decide se o candidato é correto e útil; depois, move a orientação aprovada para o documento canônico apropriado e atualiza o catálogo. Candidato é proposta: o servidor MCP não pode aprovar nem promover conteúdo.
+
+Para agentes trabalhando ao mesmo tempo, consulte [Agentes em paralelo](docs/parallel-agents.md), que explica o lock em checkout compartilhado e o fluxo Git com worktrees separados.
+
+## Prompt de sistema: configure isto no meu projeto
+
+Copie este prompt para um agente de programação aberto no projeto em que você quer instalar o Context Grove. Substitua os dois caminhos antes de enviar. O prompt orienta o agente a adaptar o conhecimento ao projeto real e configurar as ferramentas disponíveis, em vez de deixar apenas arquivos genéricos.
+
+```text
+Você está instalando o Context Grove, uma arquitetura de conhecimento compartilhado, versionada no Git, para este projeto.
+
+Projeto de destino: <CAMINHO_ABSOLUTO_DO_PROJETO>
+Checkout do Context Grove: <CAMINHO_ABSOLUTO_DO_CONTEXT_GROVE>
+
+Objetivo: deixar este projeto com uma base de conhecimento compartilhada e específica, uma conexão MCP quando o agente instalado oferecer suporte, e rotinas obrigatórias de consulta e revisão diária configuradas para este agente. Preserve todo o trabalho já existente do usuário.
+
+Siga estas etapas sem pedir confirmação para alterações locais rotineiras e reversíveis:
+
+1. Inspecione as instruções dos agentes no repositório, o status atual do Git, as configurações de agentes disponíveis e a documentação existente. Não sobrescreva alterações do usuário. Se `.context-grove/` já existir, inspecione e amplie seu conteúdo em vez de inicializá-la novamente.
+2. Confira se o Node.js é versão 22 ou mais recente. Se o Context Grove não estiver instalado no caminho fornecido, clone o repositório público em um local estável e informe o caminho resultante. Instale as dependências de runtime com `npm install --prefix <CAMINHO_ABSOLUTO_DO_CONTEXT_GROVE>`.
+3. Se `.context-grove/` não existir, execute o inicializador a partir da raiz do projeto: `node <CAMINHO_ABSOLUTO_DO_CONTEXT_GROVE>/src/init.js`. Confirme que a pasta de conhecimento está dentro do projeto de destino.
+4. Leia os templates do Context Grove e adapte o catálogo e os documentos iniciais à arquitetura, responsabilidades, segurança, práticas operacionais e decisões duráveis reais deste projeto. Inspecione as fontes antes de registrar fatos. Aponte para arquivos oficiais; marque o que não souber em vez de inventar. Não inclua segredos, dados pessoais nem transcrições brutas na base compartilhada. Remova placeholders que não sejam úteis.
+5. Copie `templates/skills/knowledge-consultation/SKILL.md` e `templates/skills/daily-review/SKILL.md` para os diretórios de skills suportados pelo agente instalado. Adicione uma regra concisa às instruções de entrada do projeto (`AGENTS.md`, `CLAUDE.md` ou equivalente) exigindo consulta antes da execução de tarefas e a revisão diária no primeiro acesso ao conhecimento de cada data UTC. Preserve as convenções e o conteúdo não relacionado já existentes.
+6. Configure o MCP do agente instalado para executar `<CAMINHO_ABSOLUTO_DO_CONTEXT_GROVE>/src/server.js` com `CONTEXT_GROVE_ROOT` apontando para a raiz do projeto de destino. Descubra o formato real da configuração e preserve os servidores MCP existentes. Se este agente não oferecer suporte a MCP ou não for possível identificar a configuração com segurança, deixe um exemplo de configuração pronto para copiar e explique a limitação.
+7. Explique na documentação do projeto como criar um arquivo candidato por aprendizado, com evidências; revisar candidatos diariamente; e promover conhecimento somente após aprovação do mantenedor. Para agentes em paralelo, documente o lock no checkout compartilhado ou o fluxo de merge Git em worktrees separados. Mantenha o acesso MCP somente leitura.
+8. Quando o cliente MCP estiver disponível, valide a configuração com `knowledge_health`, `knowledge_catalog` e uma operação de leitura/busca no conhecimento do projeto. Caso contrário, faça verificações locais equivalentes e informe o que não foi possível validar. Execute somente verificações compatíveis com as instruções deste repositório.
+9. Resuma os arquivos alterados, as configurações de agentes atualizadas, os resultados das verificações, as etapas manuais restantes e as mudanças na worktree que já existiam antes. Não faça commit, push nem publicação sem pedido explícito.
+
+Use o idioma em que solicitei esta configuração ao apresentar os resultados. Conclua todo o trabalho viável antes de me pedir para resolver um impedimento real.
+```
+
+## O que o Context Grove oferece à equipe
+
+- **Um guia compartilhado:** o conhecimento do projeto fica junto ao código em Markdown legível.
+- **Menos explicações repetidas:** os agentes consultam as mesmas decisões e regras antes de agir.
+- **Aprendizados revisados:** descobertas viram propostas baseadas em evidências; mantenedores decidem o que se torna orientação oficial.
+- **Manutenção diária:** o primeiro agente a acessar o conhecimento em cada dia UTC verifica os candidatos e registra a revisão.
+- **Rastreabilidade:** respostas apontam para suas fontes e as mudanças de conhecimento passam pelo Git.
+
+## Detalhes técnicos
+
+O Context Grove é uma camada de conhecimento de código aberto, versionada no Git. O Git é a fonte da verdade; não há serviço hospedado ou banco de dados para operar. O servidor MCP usa stdio local e lê somente Markdown dentro de `.context-grove/`. Ele não escreve conhecimento nem acessa dados da aplicação.
+
+### Ferramentas MCP
+
+| Ferramenta | O que faz |
+| --- | --- |
+| `knowledge_health` | Verifica se a pasta de conhecimento e os guias principais estão disponíveis |
+| `knowledge_catalog` | Retorna o catálogo de conhecimento do projeto |
+| `knowledge_read` | Lê um arquivo Markdown de `.context-grove/` |
+| `knowledge_search` | Encontra texto literal e retorna trechos com fontes |
+
+Quando aplicável, as respostas incluem os caminhos das fontes e a data de atualização dos arquivos. A busca compara texto literal; não é busca semântica nem vetorial.
+
+### Ciclo de conhecimento
+
+```text
+descoberta -> candidato com evidência -> revisão diária -> aprovação do mantenedor -> guia canônico -> catálogo
+```
+
+O gate diário é idempotente por data UTC: se outro agente já registrou a revisão do dia, o próximo reutiliza aquele resultado. Em um checkout compartilhado, os agentes coordenam a revisão com um lock atômico. Em worktrees separados, coordenam as alterações de log por merge e rebase do Git.
+
+### Documentação incluída
+
+- [Detalhes de configuração](docs/setup.md)
+- [Fluxo de trabalho](docs/workflow.md)
+- [Coordenação de agentes paralelos](docs/parallel-agents.md)
+- [Guia de contribuição](CONTRIBUTING.md)
+- [Política de segurança](SECURITY.md)
+
+### Tópicos do GitHub
+
+`mcp` · `mcp-server` · `model-context-protocol` · `ai-agents` · `agentic-ai` · `ai-memory` · `knowledge-management` · `shared-memory` · `developer-tools` · `open-source` · `markdown` · `git`
+
+#MCP #MCPServer #ModelContextProtocol #AIAgents #AgenticAI #AIMemory #KnowledgeManagement #SharedMemory #DeveloperTools #OpenSource #Markdown #Git
+
+## Licença
+
+MIT. Consulte [LICENSE](LICENSE).

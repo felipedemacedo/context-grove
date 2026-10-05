@@ -11,3 +11,19 @@ Before changing code, configuration, infrastructure, or project policy:
 7. During and after work, capture reusable discoveries under [LEARNING.md](LEARNING.md) when warranted.
 
 For read-only questions, consult the relevant source before answering and cite it in the response.
+
+---
+
+# Protocolo de consulta ao conhecimento
+
+Antes de alterar código, configuração, infraestrutura ou políticas do projeto:
+
+1. Leia as instruções de entrada dos agentes no repositório e confira as mudanças já existentes na worktree.
+2. Consulte `.context-grove/CATALOG.md` e leia os protocolos de consulta, segurança e contribuição relevantes para a tarefa.
+3. Leia os documentos canônicos e decisões pertinentes. Quando disponível, use as ferramentas MCP de catálogo, busca e leitura; confirme orientações importantes pelas fontes citadas e sua atualidade.
+4. Inspecione a implementação atual e testes ou exemplos próximos. O conhecimento orienta o trabalho, mas não substitui a consulta às fontes.
+5. Se fontes estiverem em conflito ou desatualizadas, registre isso no handoff e peça orientação ao mantenedor antes de confiar nelas.
+6. No primeiro acesso em uma nova data UTC, complete [DAILY_REVIEW.md](DAILY_REVIEW.md) antes de executar a tarefa.
+7. Durante e ao final do trabalho, registre descobertas reutilizáveis conforme [LEARNING.md](LEARNING.md), quando apropriado.
+
+Para perguntas sem alterações, consulte a fonte relevante antes de responder e cite-a na resposta.

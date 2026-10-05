@@ -19,3 +19,27 @@ At the first knowledge access by any agent on a new UTC date, inspect `candidate
 ## Review log
 
 See [REVIEW_LOG.md](REVIEW_LOG.md).
+
+---
+
+# Gate diário de revisão dos candidatos
+
+No primeiro acesso ao conhecimento por qualquer agente em uma nova data UTC, inspecione `candidates/` e complete o gate antes de executar a tarefa. Leia primeiro `REVIEW_LOG.md`: se já houver um registro concluído para a data UTC atual, reutilize o resultado e continue. Isso torna o gate idempotente entre agentes.
+
+## Etapas da revisão
+
+1. Releia `REVIEW_LOG.md` do disco imediatamente antes de editá-lo.
+2. Liste todos os candidatos ainda não revisados e confira suas evidências, escopo e duplicidade em relação aos documentos canônicos.
+3. Registre o relatório datado em `docs/reviews/YYYY-MM-DD.md`, incluindo cada caminho de candidato, decisão (`keep`, `reject`, `needs-evidence`), justificativa e revisor. Mantenha esses valores de status em inglês para padronizar os registros entre agentes e idiomas.
+4. Acrescente uma entrada concisa a `REVIEW_LOG.md` com link para o relatório e registre o SHA do commit após o relatório ter sido commitado.
+5. A revisão não autoriza a promoção por si só. Somente a aprovação explícita de um mantenedor permite promover conhecimento.
+
+## Agentes concorrentes e worktrees
+
+- No mesmo checkout: adquira um lock exclusivo criando atomicamente `.context-grove/.review-lock` (`mkdir` deve ter sucesso); inclua data UTC e identidade da sessão/agente. Releia o log depois de adquirir o lock e libere-o ao terminar. Se o processo tiver falhado, confirme que não há revisão ativa antes de remover um lock antigo.
+- Em branches/worktrees separados: o Git coordena as mudanças. Cada revisor prepara um relatório datado e uma alteração mínima no log; faça merge de uma revisão e depois rebase/reconcilie a outra. Antes do commit, releia o log e confira se outra branch já concluiu a revisão do dia. Mantenha relatórios aditivos e nunca substitua o log inteiro usando uma cópia desatualizada.
+- Se um lock ou conflito de merge causar dúvida, pare a revisão duplicada, preserve ambos os relatórios e reconcilie com o mantenedor. Nunca descarte silenciosamente um candidato nem o trabalho de outro agente.
+
+## Log de revisão
+
+Consulte [REVIEW_LOG.md](REVIEW_LOG.md).

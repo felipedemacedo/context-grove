@@ -1,15 +1,15 @@
-# Decision: title
+# Decision / Decisão: title / título
 
-- Date:
-- Status: proposed | accepted | superseded
-- Owner:
+- Date / Data:
+- Status / Situação: proposed / proposta | accepted / aceita | superseded / substituída
+- Owner / Responsável:
 
-## Context
+## Context / Contexto
 
-## Decision
+## Decision / Decisão
 
-## Alternatives
+## Alternatives / Alternativas
 
-## Consequences
+## Consequences / Consequências
 
-## Revisit when
+## Revisit when / Revisar quando
