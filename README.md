@@ -163,6 +163,10 @@ The daily gate is idempotent by UTC date: if another agent has already recorded 
 - [Contribution guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 
+### Tests and CI
+
+Run the MCP integration and path-containment checks locally with `npm test`. GitHub Actions runs the same checks on pushes and pull requests using Node.js 22.
+
 ### GitHub topics
 
 `mcp` · `mcp-server` · `model-context-protocol` · `ai-agents` · `agentic-ai` · `ai-memory` · `knowledge-management` · `shared-memory` · `developer-tools` · `open-source` · `markdown` · `git`
@@ -337,6 +341,10 @@ O gate diário é idempotente por data UTC: se outro agente já registrou a revi
 - [Coordenação de agentes paralelos](docs/parallel-agents.md)
 - [Guia de contribuição](CONTRIBUTING.md)
 - [Política de segurança](SECURITY.md)
+
+### Testes e CI
+
+Execute localmente os testes de integração MCP e contenção de caminhos com `npm test`. O GitHub Actions executa as mesmas verificações em pushes e pull requests com Node.js 22.
 
 ### Tópicos do GitHub
 
